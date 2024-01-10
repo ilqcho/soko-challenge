@@ -15,14 +15,9 @@ export const getAllUsers = async(req: Request, res: Response): Promise<Response>
     }
 }
 
-export const  getUserById = async(req: Request, res: Response): Promise<Response> => {
-    const userId = req.params.id;
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-        return res.status(400).json({ message: 'Invalid user ID' });
-    }
-
+export const getUserById = async(req: Request, res: Response): Promise<Response> => {
     try{
-        const user: IUser | null = await User.findById(userId);
+        const user: IUser | null = await User.findById(req.params.id);
         if(!user) return res.status(404).json({ message: 'User not found' });
     
         return res.json(user);
@@ -31,13 +26,10 @@ export const  getUserById = async(req: Request, res: Response): Promise<Response
     }
 }
 
-export const createUser = async(req: Request, res: Response): Promise<Response> => {
-    const { name, lastName, email, phone } = req.body;
-    if (!name || !lastName || !email || !phone) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
+export const createUser = async(req: Request, res: Response): Promise<Response> => {   
     try{
+        console.log('entra controller')
+        const { name, lastName, email, phone } = req.body;
         const newUser: IUser = new User({
             name,
             lastName,
@@ -53,13 +45,8 @@ export const createUser = async(req: Request, res: Response): Promise<Response> 
 }
 
 export const deleteUser = async(req: Request, res: Response): Promise<Response> => {
-    const userId = req.params.id;
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-        return res.status(400).json({ message: 'Invalid user ID' });
-    }
-
     try{
-        const user: IUser | null = await User.findByIdAndDelete(userId);
+        const user: IUser | null = await User.findByIdAndDelete(req.params.id);
         if(!user) return res.status(404).json({ message: 'User not found' });
     
         return res.json(user);
@@ -69,18 +56,8 @@ export const deleteUser = async(req: Request, res: Response): Promise<Response> 
 }
 
 export const updateUser = async(req: Request, res: Response): Promise<Response> => {
-    const userId = req.params.id;
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-        return res.status(400).json({ message: 'Invalid user ID' });
-    }
-
-    const { email } = req.body;
-    if (email && !isValidEmail(email)) {
-        return res.status(400).json({ message: 'Invalid email format' });
-    }
-
     try{
-        const user: IUser | null = await User.findByIdAndUpdate(userId, req.body, {
+        const user: IUser | null = await User.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
         });
         if(!user) return res.status(404).json({ message: 'User not found' });
