@@ -15,7 +15,7 @@ This project is an API REST implementation of a User entity utilizing technologi
 1. Clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/iCharterteam/icharterbackend.git
+git clone https://github.com/ilqcho/soko-challenge.git
 ```
 
 2. Install the dependencies by running the following command:
